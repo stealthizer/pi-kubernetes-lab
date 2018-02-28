@@ -1,0 +1,39 @@
+- name: Add apt-transport-https
+  apt:
+    name: 'apt-transport-https'
+    state: present
+    force: yes
+
+- name: Add Kubernetes Repo Key
+  apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- name: Add Docker Repo Key
+  apt_key:
+    id: F76221572C52609D
+    keyserver: hkp://keyserver.ubuntu.com:80
+
+- name: Add Kubernetes Repo
+  # Try to pick up latest stable builds. Switch over to '-unstable' if targeting latest releases
+  apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present
+
+- name: Add Docker Repo
+  apt_repository: repo='deb [arch=armhf] https://apt.dockerproject.org/repo raspbian-jessie main' state=present
+
+- name: Update APT package cache and upgrade
+  apt:
+    update_cache: yes
+    autoremove: yes
+    upgrade: yes
+
+- name: Install Packages
+  apt:
+    name: "{{ item }}"
+    force: yes
+    state: present
+  with_items:
+    - hdparm
+    - iperf
+    - mtr-tiny
+    - bridge-utils
+    - socat
+    - jq
