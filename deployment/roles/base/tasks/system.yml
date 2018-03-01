@@ -1,28 +1,11 @@
-- name: Add a group pi
-  group: name=pi
+- name: Set timezone
+  timezone: name="{{ timezone }}"
 
-- name: Add a group docker
-  group: name=docker
+- name: Update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
 
-- name: Add user pi to group docker
-  user: name=pi groups=docker,pi,video append=yes shell=/bin/bash
-
-- name: Add pi to sudoers
-  lineinfile:
-    dest: /etc/sudoers
-    state: present
-    line: "pi ALL=(ALL) NOPASSWD: ALL"
-    insertafter: "EOF"
-
-- name: Verify ~/.ssh
-  file: path="/home/pi/.ssh" state=directory recurse=no owner=pi group=pi
-
-- name: Copy SSH Key
-  copy: src="{{ ssh.pub_key_path }}" dest=/home/pi/.ssh/authorized_keys mode=0600 owner=pi group=pi
-
-- name: Set user password
-  user: name=pi password="{{ user.password }}"
-  when: user is defined and user.password is defined
+- name: Add hosts
+  template: src=hosts dest=/etc/hosts
 
 - name: Set hostname
   hostname: name="{{ name }}"
