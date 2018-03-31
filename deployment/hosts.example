@@ -1,2 +1,9 @@
 [raspberries]
-(add the ips of your servers here)
+192.168.2.100 name=master
+192.168.2.101 name=slave1
+
+[master]
+192.168.2.100
+
+[slaves]
+192.168.2.101
