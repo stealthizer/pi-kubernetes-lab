@@ -1,0 +1,10 @@
+
+
+- name: docker | Update docker service startup
+  template: src=docker_daemon.json dest=/etc/docker/daemon.json
+  register: result
+  notify:
+    - restart docker
+
+- name: docker | Notify Docker service right now to restart
+  meta: flush_handlers

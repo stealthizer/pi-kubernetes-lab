@@ -1,23 +1,25 @@
-- name: Add apt-transport-https
+- name: Install https dependencies
   apt:
-    name: 'apt-transport-https'
+    name: "{{ item }}"
     state: present
     force: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+
+- name: Add Docker Repo Key
+  apt_key: url=https://download.docker.com/linux/raspbian/gpg
+
+- name: Add Docker Repo
+  apt_repository: repo='deb [arch=armhf] https://download.docker.com/linux/raspbian stretch stable'
 
 - name: Add Kubernetes Repo Key
   apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
-- name: Add Docker Repo Key
-  apt_key:
-    id: F76221572C52609D
-    keyserver: hkp://keyserver.ubuntu.com:80
-
 - name: Add Kubernetes Repo
   # Try to pick up latest stable builds. Switch over to '-unstable' if targeting latest releases
   apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present
-
-- name: Add Docker Repo
-  apt_repository: repo='deb [arch=armhf] https://apt.dockerproject.org/repo raspbian-jessie main' state=present
 
 - name: Update APT package cache and upgrade
   apt:
@@ -31,9 +33,22 @@
     force: yes
     state: present
   with_items:
-    - hdparm
     - iperf
     - mtr-tiny
     - bridge-utils
     - socat
     - jq
+    - docker-ce
+
+- name: Allow user to run docker
+  shell: usermod pi -aG docker
+  become: yes
+
+- name: Activating cgroup
+  lineinfile:
+    path: /boot/cmdline.txt
+    backrefs: true
+    regexp: '^(.*rootwait)$'
+    line: '\1 cgroup_memory=1 cgroup_enable=memory'
+
+

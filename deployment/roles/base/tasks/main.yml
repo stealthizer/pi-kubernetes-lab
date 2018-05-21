@@ -1,9 +1,15 @@
 ---
-- name: Add and update packages
-  include: apt.yml
+- name: Setup ssh access and user
+  include: user.yml
 
 - name: Setup system parameters (boot, hosts, timzone)
   include: system.yml
 
-- name: Setup user
-  include: user.yml
+- name: Disable Swap
+  include: disable_swap.yml
+
+- name: Add and update packages
+  include: apt.yml
+
+- name: Reboot
+  include: reboot.yml
