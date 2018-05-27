@@ -1,0 +1,14 @@
+- name: Power Management | Disable Wireless and Bluetooth
+  blockinfile:
+    dest: /boot/config.txt
+    block: |
+      # Disable wifi and Bluetooth
+      dtoverlay=pi3-disable-wifi,pi3-disable-bt
+
+- name: Power Consumption | Disable hdmi on boot
+  blockinfile:
+    dest: /etc/rc.local
+    block: |
+      # Disable hdmi output to save power
+      /usr/bin/tvservice -o
+    insertbefore:  "Exit 0"

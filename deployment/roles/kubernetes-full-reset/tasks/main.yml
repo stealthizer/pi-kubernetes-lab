@@ -33,6 +33,9 @@
     - kubectl
     - kubernetes-cni
 
+- name: Delete /etc/kubernetes
+  file: path=/etc/kubernetes state=absent
+
 - name: Reboot
   shell: sleep 2 && reboot
   async: 1

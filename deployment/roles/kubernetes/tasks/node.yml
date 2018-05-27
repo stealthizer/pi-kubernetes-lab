@@ -19,3 +19,4 @@
 
 - name: kubeadm-node | Fix permission for kubelet.key
   file: path=/var/lib/kubelet/pki/kubelet.key mode="660" group=pi
+

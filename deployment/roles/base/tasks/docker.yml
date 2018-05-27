@@ -1,0 +1,47 @@
+- name: docker | Pin Docker to version {{ docker.version }} (the latest supported by Kubernetes)
+  template: src=docker-apt-pin.txt dest=/etc/apt/preferences.d/docker
+
+- name: docker | Install Docker
+  apt:
+    state: present
+    name: docker-ce={{ docker.version }}
+    autoremove: yes
+    force: yes
+
+- name: docker | Prepare docker expose args for service
+  set_fact:
+    dockerd_extra_args: "{{ ', \"hosts\": [ \"fd://\", \"tcp://0.0.0.0:2375\"]' if docker.expose_tcp else '' }}"
+
+- name: docker | Replace the startup command for Docker
+  lineinfile: 
+    dest: /lib/systemd/system/docker.service
+    regexp: '^ExecStart'
+    line: 'ExecStart=/usr/bin/dockerd'
+    state: present
+  register: result_service
+  
+- name: docker | Update docker service startup
+  template: src=docker_daemon.json dest=/etc/docker/daemon.json
+  register: result
+  notify:
+    - restart docker
+
+- name: docker | Reload systemd when service definition changed
+  command: systemctl daemon-reload
+  when: result_service|changed
+
+- name: docker | Notify Docker service right now to restart
+  meta: flush_handlers
+
+- name: Allow user to run docker
+  shell: usermod pi -aG docker
+  become: yes
+
+- name: Activating cgroup
+  lineinfile:
+    path: /boot/cmdline.txt
+    backrefs: true
+    regexp: '^(.*rootwait)$'
+    line: '\1 cgroup_memory=1 cgroup_enable=memory'
+
+

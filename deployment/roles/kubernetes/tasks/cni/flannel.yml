@@ -6,3 +6,4 @@
 - name: flannel | Create flannel resources
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
+  command: kubectl create -f /etc/kubernetes/kube-flannel.yml
