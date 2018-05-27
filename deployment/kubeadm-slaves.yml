@@ -1,0 +1,10 @@
+---
+- name: Kubernetes Slaves
+
+  hosts: slaves
+  remote_user: pi
+  become: true
+
+  roles:
+  - role: kubernetes
+    mode: slaves

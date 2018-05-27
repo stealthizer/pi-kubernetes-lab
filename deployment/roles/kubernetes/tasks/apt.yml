@@ -1,0 +1,10 @@
+- name: apt | Install Packages
+  apt:
+    name: "{{ item }}"
+    force: yes
+    state: present
+  with_items:
+    - kubelet={{ k8s.version }}
+    - kubeadm={{ k8s.version }}
+    - kubectl={{ k8s.version }}
+    - kubernetes-cni

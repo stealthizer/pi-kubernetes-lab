@@ -13,5 +13,12 @@
 - name: Add useDns=no to /etc/ssh/sshd_config
   lineinfile: dest=/etc/ssh/sshd_config state=present line="UseDNS no" insertafter="EOF"
 
-- name: Restart hostname
+- name: Reload hostname
   shell: "hostnamectl set-hostname {{ name }}"
+
+- name: System | Set gpu_mem to 16M
+  blockinfile:
+    dest: /boot/config.txt
+    block: |
+      # Set gpu_mem to minimum (16M)
+      gpu_mem=16

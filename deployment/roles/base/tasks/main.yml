@@ -1,9 +1,21 @@
 ---
-- name: Add and update packages
-  include: apt.yml
+- name: Setup ssh access and user
+  import_tasks: user.yml
+
+- name: Power Management
+  import_tasks: power_management.yml
 
 - name: Setup system parameters (boot, hosts, timzone)
-  include: system.yml
+  import_tasks: system.yml
 
-- name: Setup user
-  include: user.yml
+- name: Disable Swap
+  import_tasks: disable_swap.yml
+
+- name: Add and update packages
+  import_tasks: apt.yml
+
+- name: Base | Install Docker
+  import_tasks: docker.yml
+
+- name: Reboot
+  import_tasks: reboot.yml

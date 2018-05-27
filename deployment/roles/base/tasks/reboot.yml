@@ -1,0 +1,10 @@
+- name: Reboot
+  shell: sleep 2 && reboot
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- name: Waiting for servers
+  become: no
+  delegate_to: localhost
+  wait_for: host={{ inventory_hostname }} port=22 state=started delay=10 timeout=60

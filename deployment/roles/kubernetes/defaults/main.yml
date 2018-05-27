@@ -1,0 +1,16 @@
+reset: false
+overlay_network: flannel
+network:
+  service_subnet: 192.168.2.0/24
+  pod_subnet: 10.244.0.0/16
+images:
+  flannel: quay.io/coreos/flannel:v0.10.0-arm
+  weave: weaveworks/weave-kube:2.3.0
+  weave_npc: weaveworks/weave-npc:2.3.0
+k8s:
+  version: 1.10.2*
+  # Timing is good for demos. Defaults are 5min eviction and 40s node grace period
+  # TODO: Not yet put into the k8s configuration
+  pod_eviction_timeout: 60s
+  node_monitor_grace_period: 40s
+debug_level: 2
