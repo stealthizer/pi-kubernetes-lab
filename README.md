@@ -5,7 +5,7 @@ This code is related to the "How I meet your Cluster" blog series found in [part
 
 To setup the basic system, create a hosts file (you can use the example file provided) and execute:
 ```
-ansible-playbook -k -i hosts setup.yml
+ansible-playbook -k -i hosts base.yml
 ```
 To create the master node, execute:
 ```
@@ -24,4 +24,4 @@ To power down everything you can execute:
 ansible-playbook -i hosts Shutdown.yml
 ```
 
-This Ansible playbooks are inspire in the works of [Ro14nd](https://ro14nd.de/kubernetes-on-raspberry-pi3)
+This Ansible playbooks are inspired in the works of [Ro14nd](https://ro14nd.de/kubernetes-on-raspberry-pi3)
